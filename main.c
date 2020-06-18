@@ -4,11 +4,12 @@
 enum STATE {START, II, III, IV, F1, F2};
 typedef enum STATE STATE;
 
-char* getNextNumber(FILE *file);
-STATE start(int c, char cType, char* number, int* numIndex);
-STATE ii(int c, char cType, char* number, int* numIndex);
-STATE iii(int c, char cType, char* number, int* numIndex);
-STATE iv(int c, char cType, char* number, int* numIndex);
+
+int getNextNumber(FILE *file, char* number, int* numIndex);
+STATE start(int currentChar, char charType, char* number, int* numIndex);
+STATE ii(int currentChar, char charType, char* number, int* numIndex);
+STATE iii(int currentChar, char charType, char* number, int* numIndex);
+STATE iv(int currentChar, char charType, char* number, int* numIndex);
 
 
 int main (void){
@@ -21,111 +22,107 @@ int main (void){
         printf("file opened!\n");
     } 
 
-    char* number;
+    char* number = (char*) malloc(sizeof(char) * 100);
+    int* numIndex = (int*) malloc(sizeof(int));
     for(int i=0;i<3;i++){
-        number = getNextNumber(file);
+        getNextNumber(file, number, numIndex);
         printf("Next number is: %s\n", number);
     } 
 
     free(number);
+    free(numIndex);
     printf("\nFinishing program..\n");
     return 0;
 }
 
-char* getNextNumber(FILE *file){
+int getNextNumber(FILE *file, char* number, int* numIndex){
     STATE state = START;
-    
-    //Recognizes numbers until 7 digits
-    char* number = (char*) malloc(sizeof(char) * 100);
-    int* numIndex = (int*) malloc(sizeof(int));
     *numIndex = 0;
 
-    int c;
-    char cType;
-    int index;
+    int currentChar;
+    char charType;
     char possibleChar[12] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'};
+    int index;
 
-    while((c=fgetc(file)) != EOF){
+    while((currentChar=fgetc(file)) != EOF){
         //check the type of the character(i.e, N, *, .)
             index = -1;
             for(int i = 0; i<11; i++){
-                if((char)c == possibleChar[i]){
+                if((char)currentChar == possibleChar[i]){
                     index = i;
                 }
             }
            
             if(index <= 9 && index > -1){
-                cType = 'N';
+                charType = 'N';
             }else if(index == 10){
-                cType = '.';
+                charType = '.';
             }else if(index == -1){
-                cType = '*';
+                charType = '*';
             }
 
         switch(state){
             case START:
-                state = start(c, cType, number, numIndex);    
+                state = start(currentChar, charType, number, numIndex);    
                 break;
             case II:
-                state = ii(c, cType, number, numIndex);
+                state = ii(currentChar, charType, number, numIndex);
                 break;
             case III:
-                state = iii(c, cType, number, numIndex);
+                state = iii(currentChar, charType, number, numIndex);
                 break;
             case IV:
-                state = iv(c, cType, number, numIndex);
+                state = iv(currentChar, charType, number, numIndex);
                 break;
-            case F1:
-                free(numIndex);
-                return number;
-            case F2:
-                free(numIndex);
-                return number;
+            default:
+                return 0;
         }
     }
 }
 
-STATE start(int c, char cType, char* number, int* numIndex){
-    if(cType == 'N'){
-        number[*numIndex] = (char)c;
+STATE start(int currentChar, char charType, char* number, int* numIndex){
+    if(charType == 'N'){
+        number[*numIndex] = (char)currentChar;
         *numIndex += 1;
         return II;
-    }else if(cType == '*' || cType == '.'){
+    }else if(charType == '*' || charType == '.'){
         return START;
     }
 }
 
-STATE ii(int c, char cType, char* number, int* numIndex){
-    if(cType == 'N'){
-        number[*numIndex] = (char)c;
+STATE ii(int currentChar, char charType, char* number, int* numIndex){
+    if(charType == 'N'){
+        number[*numIndex] = (char)currentChar;
         *numIndex += 1;
         return II; 
-    }else if(cType == '.'){
-        number[*numIndex] = (char)c;
+    }else if(charType == '.'){
+        number[*numIndex] = (char)currentChar;
         *numIndex += 1;
         return III;
-    }else if(cType == '*'){
+    }else if(charType == '*'){
+        number[*numIndex] = '\0';
         return F1;
     }
 }
 
-STATE iii(int c, char cType, char* number, int* numIndex){
-    if(cType == 'N'){
-        number[*numIndex] = (char)c;
+STATE iii(int currentChar, char charType, char* number, int* numIndex){
+    if(charType == 'N'){
+        number[*numIndex] = (char)currentChar;
         *numIndex += 1;
         return IV;
-    }else if(cType == '*' || cType == '.'){
+    }else if(charType == '*' || charType == '.'){
         *numIndex = 0;
         return START;
     }
 }
 
-STATE iv(int c, char cType, char* number, int* numIndex){
-    if(cType == 'N'){
-        number[*numIndex] = (char)c;
+STATE iv(int currentChar, char charType, char* number, int* numIndex){
+    if(charType == 'N'){
+        number[*numIndex] = (char)currentChar;
         *numIndex += 1;
         return IV;
-    }else if(cType == '*' || cType == '.'){
+    }else if(charType == '*' || charType == '.'){
+        number[*numIndex] = '\0';
         return F2;
     }
 }
