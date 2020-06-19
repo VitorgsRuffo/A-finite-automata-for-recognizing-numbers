@@ -4,7 +4,7 @@
 
 Este programa foi feito como parte de um trabalho para a disciplina de Príncipios e Paradigmas de Linguagens de Programação.
 
-Nele mostramos como é o processo de construção de um programa que reconhece padroẽs dentro de uma sequência de caracteres, que é justamente o trabalho do analisador léxico. 
+Nele mostramos como é o processo de construção de um programa que reconhece padrões dentro de uma sequência de caracteres, que é justamente o trabalho do analisador léxico. 
  	Primeiramente devemos escolher os tokens que queremos identificar: Literal Inteiro e Literal Ponto Flutuante. Em seguida definimos, com a ajuda das expressões regulares, como é o padrão desses dois tipos numéricos. 
   ![tokens regex image](regex.png)
   Então convertemos as expressões em um único autômato finito determinístico que é capaz de identificar esses padrões dentro de uma string de entrada. Por fim, basta representar o autômato em forma de código.
