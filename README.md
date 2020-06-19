@@ -2,12 +2,10 @@
 
 ## Autômato finito para o reconhecimento de números
 
-Este programa foi feito como parte de um trabalho para a disciplina de Príncipios e Paradigmas de Linguagens de Programação.
-
-Nele mostramos como é o processo de construção de um programa que reconhece padrões dentro de uma sequência de caracteres, que é justamente o trabalho do analisador léxico. 
+Este programa foi feito como parte de um trabalho para a disciplina de Príncipios e Paradigmas de Linguagens de Programação. Nele mostramos como é o processo de construção de um programa que reconhece padrões dentro de uma sequência de caracteres, que é justamente o trabalho do analisador léxico. 
  	Primeiramente devemos escolher os tokens que queremos identificar: Literal Inteiro e Literal Ponto Flutuante. Em seguida definimos, com a ajuda das expressões regulares, como é o padrão desses dois tipos numéricos. 
   ![tokens regex image](regex.png)
-  Então convertemos as expressões em um único autômato finito determinístico que é capaz de identificar esses padrões dentro de uma string de entrada. Por fim, basta representar o autômato em forma de código.
+  Então, devemos converter as expressões em um único autômato finito determinístico que é capaz de identificar esses padrões dentro de uma string de entrada. Por fim, basta representar o autômato em forma de código.
   ![automata diagram](automata-diagram.png)
 	Teremos um arquivo que guarda a nossa sequência de caracteres com alguns números dentro. Foi contruida uma função chamada getNextNumber, que é responsavel por toda a mágica e retorna o próximo token numérico encontrado dentro da string.
 	Para converter o autômato em código criamos um enum para enumerar cada um dos possíveis estados e uma variável para guardar o estado atual. Construimos funções para representar cada transição de estado. Essas funções recebem um caractere lido do arquivo e o seu tipo, e retornam qual será o próximo estado do autômato após a leitura do caracter.
